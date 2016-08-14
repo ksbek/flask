@@ -1,0 +1,110 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h1>Documents</h1>
+<br>
+
+{% if rows|length > 0 %}
+<input type="hidden" id="documentID" value="{{ rows[0].id }}">
+{% endif %}
+
+<div class="col-md-4">
+  <div class="row">
+    <table class="table table-bordered table-hover table-striped" id="titleList">
+      <thead>
+        <th>Title</th>
+        <th>Subtitle</th>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr id="{{ row.id }}">
+            <td>{{ row.title }}</td>
+            <td>{{ row.subtitle }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <button class="btn btn-primary" id="addTitleBtn">Add Title</button>
+  </div>
+</div>
+
+<div class="col-md-1"></div>
+
+{% if rows|length > 0 %}
+
+<div class="col-md-7">
+  <div class="row">
+    <div contentEditable='true' id="documentNotes" cols=50 rows=20>{{ rows[0].notes }}</div>
+  </div>
+  <div class="row">
+    <button class="btn btn-success pull-right" id="updateTitleBtn">Save</button>
+  </div>
+  <div clas="row">
+    <div class="row pull-right">
+      Created: <span id="createdDate">{{ rows[0].created_on.strftime('%d/%m/%Y') }}</span> by <span id="authorName">{{ rows[0].author }}</span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row pull-right">
+      Updated: <span id="updatedDate">{{ rows[0].modified_on.strftime('%d/%m/%Y') }}</span> by <span id="editorName">{{ rows[0].editor }}</span>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<div class="col-md-7" id="documentContent" style="display: none">
+  <div class="row">
+    <div contentEditable='true' id="documentNotes" cols=50 rows=20></div>
+  </div>
+  <div class="row">
+    <button class="btn btn-success pull-right" id="updateTitleBtn">Save</button>
+  </div>
+  <div clas="row">
+    <div class="row pull-right">
+      Created: <span id="createdDate"></span> by <span id="authorName"></span>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row pull-right">
+      Updated: <span id="updatedDate"></span> by <span id="editorName"></span>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<!-- Modal -->
+<div class="modal fade" id="addTitleModal" role="dialog">
+  <div class="modal-dialog">
+  
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="padding:35px 50px;">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4><span class="glyphicon glyphicon-plus"></span> Add Title</h4>
+      </div>
+      <div class="modal-body" style="padding:40px 50px;">
+        <form role="form">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Enter title">
+          </div>
+          <div class="form-group">
+            <label for="subtitle">Subtitle</label>
+            <input type="text" class="form-control" id="subtitle" placeholder="Enter subtitle">
+          </div>
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea class="form-control" id="notes" placeholder="Enter notes"></textarea>
+          </div>
+          <button type="submit" class="btn btn-success btn-block" id="addTitleSubmitBtn"><span class="glyphicon glyphicon-off"></span> Submit</button>
+        </form>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+{% endblock %}

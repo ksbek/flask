@@ -1,0 +1,67 @@
+# project/models.py
+
+
+import datetime
+
+from project import db, bcrypt
+
+
+class User(db.Model):
+
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    registered_on = db.Column(db.DateTime, nullable=False)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
+    documents = db.relationship('Document', backref='author_id', lazy='dynamic')
+
+    def __init__(self, email, password, paid=False, admin=False):
+        self.email = email
+        self.password = bcrypt.generate_password_hash(password)
+        self.registered_on = datetime.datetime.now()
+        self.admin = admin
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
+
+    def __repr__(self):
+        return '<email {}'.format(self.email)
+
+class Document(db.Model):
+
+    __tablename__ = "documents"
+
+    id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    editor_id = db.Column(db.Integer, nullable=False)
+    created_on = db.Column(db.DateTime, nullable=False)
+    modified_on = db.Column(db.DateTime, nullable=False)
+    title = db.Column(db.String, nullable=False)
+    subtitle = db.Column(db.String, nullable=False)
+    notes = db.Column(db.String, nullable=False)
+
+    def __init__(self, author_id, editor_id, title, subtitle, notes):
+        self.author_id = author_id
+        self.editor_id = editor_id
+        self.title = title
+        self.subtitle = subtitle
+        self.notes = notes
+        self.created_on = self.created_on
+        self.modified_on = datetime.datetime.now()
+
+    def get_id(self):
+        return self.id
+
+    def __repr__(self):
+        return '<Document %r>' % (self.title)

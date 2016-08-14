@@ -1,0 +1,74 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+
+<h1>Users</h1>
+<br>
+
+{% if users|length > 1 %}
+<input type="hidden" id="userID" value="{{ users[0].id }}">
+{% endif %}
+
+<div class="col-md-12">
+  <div class="row">
+    <table class="table table-bordered table-hover table-striped" id="userList">
+      <thead>
+        <th>Email</th>
+        <th>Name</th>
+        <th>Action</th>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          {% if user.id != current_user.id %}
+          <tr id="user{{ user.id }}">
+            <td>{{ user.email }}</td>
+            <td>{{ user.name }}</td>
+            <td><button class="btn btn-sm btn-primary edit-user" id="{{ user.id }}">Edit</button></td>
+          </tr>
+          {% endif %}
+        {% else %}
+          <em>Unbelievable.  No users here so far</em>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <button class="btn btn-primary" id="addUserBtn">Add User</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addUserModal" role="dialog">
+  <div class="modal-dialog">
+  
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="padding:35px 50px;">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>Add User</h4>
+      </div>
+      <div class="modal-body" style="padding:40px 50px;">
+        <form role="form" id="userForm" data-toggle="validator">
+          <div class="form-group">
+            <label for="userEmail"></label>
+            <input type="email" class="form-control" id="userEmail" placeholder="Enter email" required>
+          </div>
+          <div class="form-group">
+            <label for="userName">Name</label>
+            <input type="text" class="form-control" id="userName" placeholder="Enter name" required>
+          </div>
+          <div class="form-group">
+            <label for="userPassword">Password</label>
+            <input type="password" class="form-control" id="userPassword" placeholder="Enter password" data-minlength="6" data-minlength="25" required>
+          </div>
+          <button type="submit" class="btn btn-success btn-block" id="addUserSubmitBtn"><span class="glyphicon glyphicon-off"></span> Save</button>
+        </form>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+
+{% endblock %}
